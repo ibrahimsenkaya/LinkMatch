@@ -6,9 +6,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class GridColorizer : MonoBehaviour
+public class TableColorizer : MonoBehaviour
 {
-    [SerializeField] private GridCreator _gridCreator; 
+    [SerializeField] private BoardCreator boardCreator; 
     public bool colorizeGradient;
     public bool withCurve;
     [ShowIf("colorizeGradient")]
@@ -20,10 +20,10 @@ public class GridColorizer : MonoBehaviour
     
     private void OnDrawGizmos()
     {
-        if (_gridCreator==null) return;
+        if (boardCreator==null) return;
       
         float farest = 0;
-        foreach (var point in _gridCreator.points)
+        foreach (var point in boardCreator.points)
         {
             float magnitude = (transform.position - point).magnitude;
             if (magnitude>farest)
@@ -31,7 +31,7 @@ public class GridColorizer : MonoBehaviour
         }
         
     
-        foreach (var pos in _gridCreator.points)
+        foreach (var pos in boardCreator.points)
         {
             if (colorizeGradient)
             {
@@ -48,10 +48,10 @@ public class GridColorizer : MonoBehaviour
                 
             else
                 Gizmos.color=Color.red;
-            if (_gridCreator.currentDimension==Dimansions.XY)
-                Gizmos.DrawCube(pos,new Vector3(_gridCreator.width,_gridCreator.height,.5f));
-            if (_gridCreator.currentDimension==Dimansions.XZ)
-                Gizmos.DrawCube(pos,new Vector3(_gridCreator.width,.5f,_gridCreator.height));
+            if (boardCreator.currentDimension==Dimansions.XY)
+                Gizmos.DrawCube(pos,new Vector3(boardCreator.width,boardCreator.height,.5f));
+            if (boardCreator.currentDimension==Dimansions.XZ)
+                Gizmos.DrawCube(pos,new Vector3(boardCreator.width,.5f,boardCreator.height));
         }
     }
 }

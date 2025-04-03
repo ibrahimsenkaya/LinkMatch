@@ -5,7 +5,7 @@ using NaughtyAttributes;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GridCreator : MonoBehaviour
+public class BoardCreator : MonoBehaviour
 {
     [OnValueChanged("Create")] [SerializeField]
     private CellShape cellShape;
@@ -41,8 +41,8 @@ public class GridCreator : MonoBehaviour
     [HideInInspector] public List<Vector3> points = new();
     
     
-    public GameObject tilePrefab;
-    public List<GameObject> tiles = new List<GameObject>();
+    public Tile tilePrefab;
+    public List<Tile> tiles = new();
 
     [Button()]
     public void Create()
@@ -83,12 +83,7 @@ public class GridCreator : MonoBehaviour
                         if (currentDimension == Dimansions.XZ)
                             tempPos = center + new Vector3(xPos, 0, yPos);
                         points.Add(tempPos);
-                        if (tilePrefab!= null)
-                        {
-                            GameObject tempTile =Instantiate(tilePrefab, tempPos, Quaternion.identity, transform);
-                            tiles.Add(tempTile);
-                            tempTile.name = $"Tile {x} {y}";
-                        }
+                        GenerateTile(tempPos, x, y);
                         //poses[((xCount-1) * y) + xCount] = tempPos;
                     }
                 }
@@ -115,12 +110,7 @@ public class GridCreator : MonoBehaviour
                         if (currentDimension == Dimansions.XZ)
                             tempPos = center + new Vector3(xPos, 0, yPos);
                         points.Add(tempPos);
-                        if (tilePrefab!= null)
-                        {
-                            GameObject tempTile =Instantiate(tilePrefab, tempPos, Quaternion.identity, transform);
-                            tiles.Add(tempTile);
-                            tempTile.name = $"Tile {x} {y}";
-                        }
+                        GenerateTile(tempPos, x, y);
                         //poses[((xCount-1) * y) + xCount] = tempPos;
                     }
                 }
@@ -149,12 +139,7 @@ public class GridCreator : MonoBehaviour
                         if (currentDimension == Dimansions.XZ)
                             tempPos = center + new Vector3(xPos, 0, yPos);
                         points.Add(tempPos);
-                        if (tilePrefab!= null)
-                        {
-                            GameObject tempTile =Instantiate(tilePrefab, tempPos, Quaternion.identity, transform);
-                            tiles.Add(tempTile);
-                            tempTile.name = $"Tile {x} {y}";
-                        }
+                        GenerateTile(tempPos, x, y);
                         //poses[((xCount-1) * y) + xCount] = tempPos;
                     }
                 }
@@ -177,12 +162,7 @@ public class GridCreator : MonoBehaviour
                         if (currentDimension == Dimansions.XZ)
                             tempPos = center + new Vector3(xPos, 0, yPos);
                         points.Add(tempPos);
-                        if (tilePrefab!= null)
-                        {
-                            GameObject tempTile =Instantiate(tilePrefab, tempPos, Quaternion.identity, transform);
-                            tiles.Add(tempTile);
-                            tempTile.name = $"Tile {x} {y}";
-                        }
+                        GenerateTile(tempPos, x, y);
                         //poses[((xCount-1) * y) + xCount] = tempPos;
                     }
                 }
@@ -209,12 +189,7 @@ public class GridCreator : MonoBehaviour
                         if (currentDimension == Dimansions.XZ)
                             tempPos = center + new Vector3(xPos, 0, yPos);
                         points.Add(tempPos);
-                        if (tilePrefab!= null)
-                        {
-                            GameObject tempTile =Instantiate(tilePrefab, tempPos, Quaternion.identity, transform);
-                            tiles.Add(tempTile);
-                            tempTile.name = $"Tile {x} {y}";
-                        }
+                        GenerateTile(tempPos, x, y);
                         //poses[((xCount-1) * y) + xCount] = tempPos;
                     }
                 }
@@ -243,18 +218,14 @@ public class GridCreator : MonoBehaviour
                         if (currentDimension == Dimansions.XZ)
                             tempPos = center + new Vector3(xPos, 0, yPos);
                         points.Add(tempPos);
-                        if (tilePrefab!= null)
-                        {
-                            GameObject tempTile =Instantiate(tilePrefab, tempPos, Quaternion.identity, transform);
-                            tiles.Add(tempTile);
-                            tempTile.name = $"Tile {x} {y}";
-                            
-                        }
+                        GenerateTile(tempPos, x, y);
                         //poses[((xCount-1) * y) + xCount] = tempPos;
                     }
                 }
             }
         }
+        
+        SetTilesNeighbors();
     }
 
 
@@ -262,6 +233,57 @@ public class GridCreator : MonoBehaviour
     {
         Create();
     }
+
+    public void GenerateTile( Vector3 tempPos, int x, int y)
+    {
+        if (tilePrefab!= null)
+        {
+            var tempTile =Instantiate(tilePrefab, tempPos, Quaternion.identity, transform);
+            tiles.Add(tempTile);
+            tempTile.name = $"Tile {x} {y}";
+            
+        }
+    }
+    
+    public void SetTilesNeighbors()
+    {
+        if (tiles.Count == 0) return;
+
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            Tile tile = tiles[i];
+            tile.neighbors.Clear();
+
+            // Dikey ve yatay komşular
+            if (i - xCount >= 0)
+                tile.AddNeighbor(tiles[i - xCount]);
+            if (i + xCount < tiles.Count)
+                tile.AddNeighbor(tiles[i + xCount]);
+            if (i - 1 >= 0 && i % xCount != 0)
+                tile.AddNeighbor(tiles[i - 1]);
+            if (i + 1 < tiles.Count && i % xCount != xCount - 1)
+                tile.AddNeighbor(tiles[i + 1]);
+
+            // Çapraz komşular
+            // 1) Yukarı-Sol
+            if (i - xCount - 1 >= 0 && (i % xCount != 0))
+                tile.AddNeighbor(tiles[i - xCount - 1]);
+
+            // 2) Yukarı-Sağ
+            if (i - xCount + 1 >= 0 && (i % xCount != xCount - 1))
+                tile.AddNeighbor(tiles[i - xCount + 1]);
+
+            // 3) Aşağı-Sol
+            if (i + xCount - 1 < tiles.Count && (i % xCount != 0))
+                tile.AddNeighbor(tiles[i + xCount - 1]);
+
+            // 4) Aşağı-Sağ
+            if (i + xCount + 1 < tiles.Count && (i % xCount != xCount - 1))
+                tile.AddNeighbor(tiles[i + xCount + 1]);
+        }
+    }
+
+    
 }
 
 public enum Dimansions

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc8d2d3f433f4e5190721534b46fff16, type: 3}
+  m_Name: ChipDataHolder
+  m_EditorClassIdentifier: 
+  tileDataList:
+  - chipType: 0
+    sprite: {fileID: 21300000, guid: 703c9349cecea9f45961417b780bc2dd, type: 3}
+  - chipType: 1
+    sprite: {fileID: 21300000, guid: f071a0a58f682b04b94ccb4bcb3bb039, type: 3}
+  - chipType: 2
+    sprite: {fileID: 21300000, guid: ecc698e0499cd0242b631de9939a0aea, type: 3}
+  - chipType: 3
+    sprite: {fileID: 21300000, guid: b90927d30230ffe46b50b9eb872e729b, type: 3}
