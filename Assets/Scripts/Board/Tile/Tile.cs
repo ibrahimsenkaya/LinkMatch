@@ -13,6 +13,15 @@ public class Tile : MonoBehaviour
     if (!neighbors.Contains(tile))
          neighbors.Add(tile);
   }
+  
+  public void Highlight()
+  {
+    GetComponent<SpriteRenderer>().color = Color.red;
+  }
+  public void DownLight()
+  {
+    GetComponent<SpriteRenderer>().color = Color.white;
+  }
 
   private void OnDrawGizmosSelected()
   {
