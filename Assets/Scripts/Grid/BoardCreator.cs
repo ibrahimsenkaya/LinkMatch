@@ -43,6 +43,7 @@ public class BoardCreator : MonoBehaviour
     
     public Tile tilePrefab;
     public List<Tile> tiles = new();
+    public List<Bounds> bounds = new();
 
     [Button()]
     public void Create()
@@ -229,10 +230,10 @@ public class BoardCreator : MonoBehaviour
     }
 
 
-    private void OnValidate()
-    {
-        Create();
-    }
+    // private void OnValidate()
+    // {
+    //     Create();
+    // }
 
     public void GenerateTile( Vector3 tempPos, int x, int y)
     {
@@ -241,6 +242,7 @@ public class BoardCreator : MonoBehaviour
             var tempTile =Instantiate(tilePrefab, tempPos, Quaternion.identity, transform);
             tiles.Add(tempTile);
             tempTile.name = $"Tile {x} {y}";
+         
             
         }
     }
