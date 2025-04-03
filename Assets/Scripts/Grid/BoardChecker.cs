@@ -6,7 +6,9 @@ using UnityEngine.Serialization;
 public class BoardChecker : MonoBehaviour
 {
      public BoardCreator boardCreator;
-     public bool HasAnyMatchingChips(int matchCount)
+    
+    
+    public bool HasAnyMatchingChips(int matchCount)
     {
         foreach (var tile in boardCreator.tiles)
         {
