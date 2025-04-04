@@ -6,7 +6,11 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
   public List<Tile> neighbors;
+  public int coloumnIndex;
   public Chip chip;
+  
+  
+  
   
   public void AddNeighbor(Tile tile)
   {
@@ -31,5 +35,11 @@ public class Tile : MonoBehaviour
             Gizmos.DrawSphere(neighbor.transform.position,1f);
         }
       
+  }
+
+  public void Collect()
+  {
+    Destroy(chip.gameObject);
+    chip = null;
   }
 }

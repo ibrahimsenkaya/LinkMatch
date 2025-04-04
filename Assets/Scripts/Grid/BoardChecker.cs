@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -27,6 +28,15 @@ public class BoardChecker : MonoBehaviour
 
         return false;
     }
-    
+     
+     [Button]
+     public void ReplaceChipsOnColoumn(HashSet<int> coloumnIndexSet)
+     {
+         foreach (var coloumnIndex in coloumnIndexSet)
+         {
+             Debug.Log("Col Index:" + coloumnIndex);
+             boardCreator.columns[coloumnIndex].ReplaceChips();
+         }
+     }
     
 }

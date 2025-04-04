@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using NaughtyAttributes;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -43,7 +44,8 @@ public class BoardCreator : MonoBehaviour
     
     public Tile tilePrefab;
     public List<Tile> tiles = new();
-    public List<Bounds> bounds = new();
+    public List<Coloumn> columns = new();
+    
 
     [Button()]
     public void Create()
@@ -54,8 +56,15 @@ public class BoardCreator : MonoBehaviour
         {
             DestroyImmediate(transform.GetChild(i).gameObject);
         }
-     
-
+        columns.Clear();
+        for (int i = 0; i < xCount; i++)
+        {
+            columns.Add(new Coloumn(){
+                index = i,
+                tiles = new List<Tile>(),
+                chipGenerator = chipGenerator
+            });
+        }
         points.Clear();
         tiles.Clear();
         
@@ -84,7 +93,9 @@ public class BoardCreator : MonoBehaviour
                         if (currentDimension == Dimansions.XZ)
                             tempPos = center + new Vector3(xPos, 0, yPos);
                         points.Add(tempPos);
-                        GenerateTile(tempPos, x, y);
+                        var tempTile =GenerateTile(tempPos, x, y);
+                        columns[x].tiles.Add(tempTile);
+                        
                         //poses[((xCount-1) * y) + xCount] = tempPos;
                     }
                 }
@@ -235,16 +246,19 @@ public class BoardCreator : MonoBehaviour
     //     Create();
     // }
 
-    public void GenerateTile( Vector3 tempPos, int x, int y)
+    public Tile GenerateTile( Vector3 tempPos, int x, int y)
     {
         if (tilePrefab!= null)
         {
             var tempTile =Instantiate(tilePrefab, tempPos, Quaternion.identity, transform);
             tiles.Add(tempTile);
             tempTile.name = $"Tile {x} {y}";
+            tempTile.coloumnIndex = x;
          
-            
+            return tempTile;
         }
+
+        return null;
     }
     
     public void SetTilesNeighbors()
@@ -285,6 +299,50 @@ public class BoardCreator : MonoBehaviour
         }
     }
 
+    public ChipGenerator chipGenerator;
+
+}
+
+[Serializable]
+public class Coloumn
+{
+    public int index;
+    public List<Tile> tiles = new();
+    public ChipGenerator chipGenerator;
+
+    public void ReplaceChips()
+    {
+        int fallenCount = 0;
+        for (var i = 0; i < tiles.Count; i++)
+        {
+            if (tiles[i].chip ==null)
+                fallenCount++;
+            else
+            {
+                if (fallenCount!=0)
+                {
+                    tiles[i-fallenCount].chip = tiles[i].chip;
+                    tiles[i].chip = null;
+                }
+            }
+        }
+        foreach (var tile in tiles)
+        {
+            if (tile.chip!=null)
+                tile.chip.transform.DOMove(tile.transform.position,.2f).SetEase(Ease.InSine);
+
+        }
+        GenerateChips(fallenCount);
+    }
+    
+    public void GenerateChips(int count)
+    {
+        for (int i = count-1; i >= 0; i--)
+        {
+            chipGenerator.GenerateChipWithAnim(tiles[(tiles.Count-1)-i]);
+        }
+    }
+    
     
 }
 

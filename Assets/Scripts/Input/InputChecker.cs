@@ -9,13 +9,18 @@ public class InputChecker : MonoBehaviour
     
     public List<Tile> selectedTiles;
     public LineRenderer lineRenderer;
+    
+    public BoardChecker boardChecker;
 
     void Update()
     {
         if (Input.GetMouseButton(0))
             DetectTileUnderMouse();
         if (Input.GetMouseButtonUp(0))
+        {
+            CollectTileList();
             Reset();
+        }
 
     }
 
@@ -29,52 +34,39 @@ public class InputChecker : MonoBehaviour
 
     private void DetectTileUnderMouse()
     {
-        // Ekran koordinatından dünya (world) koordinatına
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        // 2D senaryoda Z=0 düzleminde çalışacağımızı varsayıyoruz
         if (board.currentDimension == Dimansions.XY)
         {
             mousePos.z = 0f;
 
-            // BoardCreator’ın “center” olarak kullandığı transform.position’dan offset alıyoruz
             Vector3 localPos = mousePos - board.transform.position;
 
-            // Bir hücrenin kapladığı toplam genişlik (width + offsetX)
             float totalCellWidth = board.width + board.offsetX;
             float totalCellHeight = board.height + board.offsetY;
 
-            // Grid orta noktası mantığı için (xCount - 1)/2, (yCount - 1)/2 kullanıyoruz
             float halfXCount = (board.xCount - 1) / 2f;
             float halfYCount = (board.yCount - 1) / 2f;
 
-            // x_count ve y_count, BoardCreator’ın grid hesaplamasındaki “x_count, y_count” ile eşleşmeli
             float x_count = localPos.x / totalCellWidth;
             float y_count = localPos.y / totalCellHeight;
 
-            // Hangi sütun/kolon ve satır?
-            // +0.5f kaydırma, negatiften pozitife geçişte yuvarlamaları düzeltmeye yardımcı olur
             int col = Mathf.FloorToInt(x_count + halfXCount + 0.5f);
             int row = Mathf.FloorToInt(y_count + halfYCount + 0.5f);
 
-            // Geçerli indis mi?
             if (col >= 0 && col < board.xCount && row >= 0 && row < board.yCount)
             {
-                // Tile listesinde index => (row * xCount + col)
                 int index = row * board.xCount + col;
                 if (index >= 0 && index < board.tiles.Count)
                 {
                     if (cTile !=null)
                         cTile.DownLight();
                     Tile tile = board.tiles[index];
-                    Debug.Log("Tıkladığınız hücre: " + tile.name);
                     tile.Highlight();
                     cTile = tile;
                     
                     ManageSelectedTileList(tile);
                     SetLinePoints();
-                    // İsterseniz buradan tile’a özel işlemler yapabilirsiniz
-                    // tile.Highlight();
                 }
             }
         }
@@ -119,6 +111,18 @@ public class InputChecker : MonoBehaviour
             pos.z = -1f; 
             lineRenderer.SetPosition(i, pos);
         }
+    }
+    
+    public void CollectTileList()
+    {
+        if (selectedTiles.Count<3) return;
+        HashSet<int> coloumnIndexSet = new HashSet<int>();
+        foreach (var tile in selectedTiles)
+        {
+            tile.Collect();
+            coloumnIndexSet.Add(tile.coloumnIndex);
+        }
+        boardChecker.ReplaceChipsOnColoumn(coloumnIndexSet);
     }
   
 }

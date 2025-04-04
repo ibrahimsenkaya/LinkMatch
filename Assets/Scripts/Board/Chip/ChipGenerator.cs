@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -10,8 +11,7 @@ public class ChipGenerator : MonoBehaviour
     
     public BoardCreator boardCreator;
     public Chip chipPrefab;
-
-    public List<Chip> tiles = new List<Chip>();
+    public List<Chip> chips = new List<Chip>();
     
     [Button]
     public void GenerateTiles()
@@ -20,7 +20,7 @@ public class ChipGenerator : MonoBehaviour
         {
             DestroyImmediate(transform.GetChild(i).gameObject);
         }
-        tiles.Clear();
+        chips.Clear();
         
         foreach (var tile in boardCreator.tiles)
         {
@@ -29,7 +29,7 @@ public class ChipGenerator : MonoBehaviour
             ChipData tileData = chipDataContainer.GetTileData(chipType);
             chip.Initialize(tileData);
             tile.chip = chip;
-            tiles.Add(chip);
+            chips.Add(chip);
         }
     }
 
@@ -38,4 +38,19 @@ public class ChipGenerator : MonoBehaviour
         int randomIndex = Random.Range(0, chipDataContainer.tileDataList.Count);
         return chipDataContainer.tileDataList[randomIndex].chipType;
     }
+
+
+    public void GenerateChipWithAnim(Tile tile)
+    {
+        Vector3 spawnPos = tile.transform.position;
+        spawnPos.y = 50f;
+        var chip = Instantiate(chipPrefab, spawnPos, Quaternion.identity,transform);
+        ChipType chipType = GetRandomTileType();
+        ChipData tileData = chipDataContainer.GetTileData(chipType);
+        chip.Initialize(tileData);
+        tile.chip = chip;
+        chips.Add(chip);
+        chip.transform.DOMove(tile.transform.position, 0.5f).SetEase(Ease.InSine);
+    }
+   
 }
