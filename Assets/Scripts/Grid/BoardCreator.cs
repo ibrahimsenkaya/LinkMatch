@@ -51,7 +51,7 @@ public class BoardCreator : MonoBehaviour
     public void Create()
     {
         //points.ForEach(x=>DestroyImmediate(x.GameObject()));
-        Camera.main.orthographicSize = (width * xCount) + ((xCount - 1) * (offsetX / 2f)) + (width* 2f);
+      
         for (int i = transform.childCount-1; i >=0; i--)
         {
             DestroyImmediate(transform.GetChild(i).gameObject);

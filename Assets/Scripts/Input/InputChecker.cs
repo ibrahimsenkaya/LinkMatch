@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,15 +10,26 @@ public class InputChecker : MonoBehaviour
     
     public List<Tile> selectedTiles;
     public LineRenderer lineRenderer;
-    
     public BoardChecker boardChecker;
+
+    public Action OnMakeMove;
+    
+    bool enableToUse;
+
+    public void Enable(bool enable = true)
+    {
+        enableToUse = enable;
+    }
 
     void Update()
     {
+        if (!enableToUse) return;
+       
         if (Input.GetMouseButton(0))
             DetectTileUnderMouse();
         if (Input.GetMouseButtonUp(0))
         {
+            
             CollectTileList();
             Reset();
         }
@@ -115,6 +127,7 @@ public class InputChecker : MonoBehaviour
     
     public void CollectTileList()
     {
+        if (selectedTiles.Count !=0 )OnMakeMove?.Invoke();
         if (selectedTiles.Count<3) return;
         HashSet<int> coloumnIndexSet = new HashSet<int>();
         foreach (var tile in selectedTiles)

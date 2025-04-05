@@ -14,7 +14,7 @@ public class ChipGenerator : MonoBehaviour
     public List<Chip> chips = new List<Chip>();
     
     [Button]
-    public void GenerateTiles()
+    public void GenerateChips()
     {
         for (int i = transform.childCount-1; i >=0; i--)
         {
@@ -25,7 +25,7 @@ public class ChipGenerator : MonoBehaviour
         foreach (var tile in boardCreator.tiles)
         {
             var chip = Instantiate(chipPrefab, tile.transform.position, Quaternion.identity,transform);
-            ChipType chipType = GetRandomTileType();
+            ChipType chipType = GetRandomChipType();
             ChipData tileData = chipDataContainer.GetTileData(chipType);
             chip.Initialize(tileData);
             tile.chip = chip;
@@ -33,7 +33,7 @@ public class ChipGenerator : MonoBehaviour
         }
     }
 
-    private ChipType GetRandomTileType()
+    private ChipType GetRandomChipType()
     {
         int randomIndex = Random.Range(0, chipDataContainer.tileDataList.Count);
         return chipDataContainer.tileDataList[randomIndex].chipType;
@@ -45,7 +45,7 @@ public class ChipGenerator : MonoBehaviour
         Vector3 spawnPos = tile.transform.position;
         spawnPos.y = 50f;
         var chip = Instantiate(chipPrefab, spawnPos, Quaternion.identity,transform);
-        ChipType chipType = GetRandomTileType();
+        ChipType chipType = GetRandomChipType();
         ChipData tileData = chipDataContainer.GetTileData(chipType);
         chip.Initialize(tileData);
         tile.chip = chip;
