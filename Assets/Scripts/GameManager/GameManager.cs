@@ -8,11 +8,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] LevelData levelData;
+    int allLevelsCount;
+    
     public BoardCreator BoardCreator;
     public ChipGenerator chipGenerator;
     public CameraController cameraController;
-    public BoardChecker boardChecker;
     public InputChecker inputChecker;
+    public CanvasController canvasController;
     
     [OnValueChanged("GetLevelData")]
     public int levelIndex;
@@ -25,8 +27,12 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         inputChecker.OnMakeMove+=DecreaseMoves;
+        canvasController.OnNextLevelClicked += NextLevel;
+        canvasController.OnRetryLevelClicked += RetryLevel;
+        allLevelsCount = Resources.LoadAll<LevelData>("Levels").Length;
     }
 
+    
 
     private void Start()
     {
@@ -36,7 +42,7 @@ public class GameManager : MonoBehaviour
     }
     public void GetLevelData()
     {
-        levelData = Resources.Load<LevelData>("Levels/LevelData " + levelIndex);
+        levelData = Resources.Load<LevelData>("Levels/LevelData " + (levelIndex%allLevelsCount));
         if (levelData == null)
         {
             Debug.LogError("Level data not found for level " + levelIndex);
@@ -47,6 +53,11 @@ public class GameManager : MonoBehaviour
     {
         if (levelData ==null) return;
         
+        remainingMoves = levelData.targetMoves;
+        targetScore = levelData.targetScore;
+        score = 0;
+
+        
         BoardCreator.xCount = levelData.RowCount;
         BoardCreator.yCount = levelData.ColumnCount;
         BoardCreator.Create();
@@ -56,15 +67,27 @@ public class GameManager : MonoBehaviour
         cameraController.FitCamera(BoardCreator);
         
         inputChecker.Enable();
-        
-        remainingMoves = levelData.targetMoves;
-        targetScore = levelData.targetScore;
-        score = 0;
+        canvasController.OpenGameplayPanel(targetScore,remainingMoves,levelIndex+1);
 
     }
     
+    public void NextLevel()
+    {
+        levelIndex++;
+        GetLevelData();
+        PrepareManagers();
+    }
+    
+    public void RetryLevel()
+    {
+        this.levelIndex = levelIndex;
+        PrepareManagers();
+    }
+    
+    
 
     #region Requiriment Checker
+    
 
     public void AddScore(int amount)
     {
@@ -73,6 +96,7 @@ public class GameManager : MonoBehaviour
         {
             GameOver(true);
         }
+        canvasController.UpdateGameplayScore(score, targetScore, remainingMoves, levelData.targetMoves);
     }
     
     public void DecreaseMoves()
@@ -82,30 +106,25 @@ public class GameManager : MonoBehaviour
         {
             GameOver();
         }
+        canvasController.UpdateGameplayScore(score, targetScore, remainingMoves, levelData.targetMoves);
     }
     public void GameOver(bool isWin = false)
     {
         inputChecker.Enable(false);
-        if (isWin)
-        {
-            Debug.Log("You Win!");
-        }
-        else
-        {
-            Debug.Log("Game Over");
-        }
+        canvasController.GameOver(isWin);
+
     }
 
-    #endregion
-    
+    #endregion 
 
- 
-    
-    
-    
-    
-    
-    
-    
-   
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+            AddScore(1000);
+        if (Input.GetKeyDown(KeyCode.N))
+            NextLevel();
+
+
+    }
 }
