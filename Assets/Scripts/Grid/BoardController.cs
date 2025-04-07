@@ -4,12 +4,17 @@ using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class BoardChecker : MonoBehaviour
+public class BoardController : MonoBehaviour
 {
-     public BoardCreator boardCreator;
+    private BoardManager boardManager;
+
+    public void Initialize(BoardManager boardManager, ChipGenerator chipGenerator)
+    {
+        this.boardManager = boardManager;
+    }
      public bool HasAnyMatchingChips(int matchCount)
     {
-        foreach (var tile in boardCreator.tiles)
+        foreach (var tile in boardManager.tiles)
         {
             int tempMatchCount = 0;
             if (tile.neighbors.Count > 0)
@@ -28,15 +33,5 @@ public class BoardChecker : MonoBehaviour
 
         return false;
     }
-     
-     [Button]
-     public void ReplaceChipsOnColoumn(HashSet<int> coloumnIndexSet)
-     {
-         foreach (var coloumnIndex in coloumnIndexSet)
-         {
-             Debug.Log("Col Index:" + coloumnIndex);
-             boardCreator.columns[coloumnIndex].ReplaceChips();
-         }
-     }
     
 }

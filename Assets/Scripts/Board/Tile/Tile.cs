@@ -8,10 +8,13 @@ public class Tile : MonoBehaviour
   public List<Tile> neighbors;
   public int coloumnIndex;
   public Chip chip;
-  
-  
-  
-  
+  SpriteRenderer spriteRenderer;
+
+  private void Awake()
+  {
+    spriteRenderer ??= GetComponent<SpriteRenderer>();
+  }
+
   public void AddNeighbor(Tile tile)
   {
     if (!neighbors.Contains(tile))
@@ -20,11 +23,11 @@ public class Tile : MonoBehaviour
   
   public void Highlight()
   {
-    GetComponent<SpriteRenderer>().color = Color.red;
+    spriteRenderer.color = Color.red;
   }
   public void DownLight()
   {
-    GetComponent<SpriteRenderer>().color = Color.white;
+    spriteRenderer.color = Color.white;
   }
 
   private void OnDrawGizmosSelected()

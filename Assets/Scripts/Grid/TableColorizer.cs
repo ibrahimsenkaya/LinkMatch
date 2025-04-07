@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 
 public class TableColorizer : MonoBehaviour
 {
-    [SerializeField] private BoardCreator boardCreator; 
+    [FormerlySerializedAs("boardCreator")] [SerializeField] private BoardManager boardManager; 
     public bool colorizeGradient;
     public bool withCurve;
     [ShowIf("colorizeGradient")]
@@ -20,10 +20,10 @@ public class TableColorizer : MonoBehaviour
     
     private void OnDrawGizmos()
     {
-        if (boardCreator==null) return;
+        if (boardManager==null) return;
       
         float farest = 0;
-        foreach (var point in boardCreator.points)
+        foreach (var point in boardManager.points)
         {
             float magnitude = (transform.position - point).magnitude;
             if (magnitude>farest)
@@ -31,7 +31,7 @@ public class TableColorizer : MonoBehaviour
         }
         
     
-        foreach (var pos in boardCreator.points)
+        foreach (var pos in boardManager.points)
         {
             if (colorizeGradient)
             {
@@ -48,10 +48,10 @@ public class TableColorizer : MonoBehaviour
                 
             else
                 Gizmos.color=Color.red;
-            if (boardCreator.currentDimension==Dimansions.XY)
-                Gizmos.DrawCube(pos,new Vector3(boardCreator.width,boardCreator.height,.5f));
-            if (boardCreator.currentDimension==Dimansions.XZ)
-                Gizmos.DrawCube(pos,new Vector3(boardCreator.width,.5f,boardCreator.height));
+            if (boardManager.currentDimension==Dimansions.XY)
+                Gizmos.DrawCube(pos,new Vector3(boardManager.width,boardManager.height,.5f));
+            if (boardManager.currentDimension==Dimansions.XZ)
+                Gizmos.DrawCube(pos,new Vector3(boardManager.width,.5f,boardManager.height));
         }
     }
 }

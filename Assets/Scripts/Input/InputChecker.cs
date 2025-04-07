@@ -5,16 +5,22 @@ using UnityEngine;
 
 public class InputChecker : MonoBehaviour
 {
-    public BoardCreator board;
-    public Tile cTile;
+    BoardManager boardManager;
     
+    public Tile cTile;
     public List<Tile> selectedTiles;
     public LineRenderer lineRenderer;
-    public BoardChecker boardChecker;
 
     public Action OnMakeMove;
+    public Action<List<Tile>> OnSelectedTileList;
     
     bool enableToUse;
+    
+    public void Initialize(BoardManager boardManager)
+    {
+        this.boardManager = boardManager;
+        selectedTiles = new List<Tile>();
+    }
 
     public void Enable(bool enable = true)
     {
@@ -29,7 +35,6 @@ public class InputChecker : MonoBehaviour
             DetectTileUnderMouse();
         if (Input.GetMouseButtonUp(0))
         {
-            
             CollectTileList();
             Reset();
         }
@@ -42,23 +47,25 @@ public class InputChecker : MonoBehaviour
         lineRenderer.positionCount = 0;
         if (cTile != null)
             cTile.DownLight();
+        cTile = null;
+        
     }
 
     private void DetectTileUnderMouse()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (board.currentDimension == Dimansions.XY)
+        if (boardManager.currentDimension == Dimansions.XY)
         {
             mousePos.z = 0f;
 
-            Vector3 localPos = mousePos - board.transform.position;
+            Vector3 localPos = mousePos;
 
-            float totalCellWidth = board.width + board.offsetX;
-            float totalCellHeight = board.height + board.offsetY;
+            float totalCellWidth = boardManager.width + boardManager.offsetX;
+            float totalCellHeight = boardManager.height + boardManager.offsetY;
 
-            float halfXCount = (board.xCount - 1) / 2f;
-            float halfYCount = (board.yCount - 1) / 2f;
+            float halfXCount = (boardManager.xCount - 1) / 2f;
+            float halfYCount = (boardManager.yCount - 1) / 2f;
 
             float x_count = localPos.x / totalCellWidth;
             float y_count = localPos.y / totalCellHeight;
@@ -66,14 +73,14 @@ public class InputChecker : MonoBehaviour
             int col = Mathf.FloorToInt(x_count + halfXCount + 0.5f);
             int row = Mathf.FloorToInt(y_count + halfYCount + 0.5f);
 
-            if (col >= 0 && col < board.xCount && row >= 0 && row < board.yCount)
+            if (col >= 0 && col < boardManager.xCount && row >= 0 && row < boardManager.yCount)
             {
-                int index = row * board.xCount + col;
-                if (index >= 0 && index < board.tiles.Count)
+                int index = row * boardManager.xCount + col;
+                if (index >= 0 && index < boardManager.tiles.Count)
                 {
                     if (cTile !=null)
                         cTile.DownLight();
-                    Tile tile = board.tiles[index];
+                    Tile tile = boardManager.tiles[index];
                     tile.Highlight();
                     cTile = tile;
                     
@@ -85,6 +92,7 @@ public class InputChecker : MonoBehaviour
     }
     public void ManageSelectedTileList(Tile tile)
     {
+        
         if (selectedTiles.Count ==0 )
         {
             selectedTiles.Add(tile);
@@ -105,8 +113,6 @@ public class InputChecker : MonoBehaviour
         {
             selectedTiles.Add(tile);
         }
-
-
     }
     
     public void SetLinePoints()
@@ -127,15 +133,20 @@ public class InputChecker : MonoBehaviour
     
     public void CollectTileList()
     {
-        if (selectedTiles.Count !=0 )OnMakeMove?.Invoke();
-        if (selectedTiles.Count<3) return;
-        HashSet<int> coloumnIndexSet = new HashSet<int>();
-        foreach (var tile in selectedTiles)
-        {
-            tile.Collect();
-            coloumnIndexSet.Add(tile.coloumnIndex);
-        }
-        boardChecker.ReplaceChipsOnColoumn(coloumnIndexSet);
+        if (selectedTiles.Count >= 3)
+            OnSelectedTileList?.Invoke(selectedTiles);
+        if (selectedTiles.Count!=0)
+            OnMakeMove?.Invoke();
+
+
+
+        // HashSet<int> coloumnIndexSet = new HashSet<int>();
+        // foreach (var tile in selectedTiles)
+        // {
+        //     tile.Collect();
+        //     coloumnIndexSet.Add(tile.coloumnIndex);
+        // }
+        // boardChecker.ReplaceChipsOnColoumn(coloumnIndexSet);
     }
   
 }

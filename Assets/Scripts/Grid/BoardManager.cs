@@ -6,15 +6,22 @@ using NaughtyAttributes;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BoardCreator : MonoBehaviour
+public class BoardManager : MonoBehaviour
 {
+    #region BoardShapeProperties
+
     [OnValueChanged("Create")] [SerializeField]
     private CellShape cellShape;
 
     [OnValueChanged("Create")] [SerializeField]
     private GridType gridType;
 
-    [OnValueChanged("Create")] public Dimansions currentDimension;
+    [OnValueChanged("Create")] 
+    public Dimansions currentDimension;
+
+    #endregion
+
+    #region BoardSizeProperties
 
     #region Free
 
@@ -38,17 +45,21 @@ public class BoardCreator : MonoBehaviour
 
     private Vector3 center;
 
+    #endregion
 
-    [HideInInspector] public List<Vector3> points = new();
-    
-    
-    public Tile tilePrefab;
+    #region Lists
+
     public List<Tile> tiles = new();
     public List<Coloumn> columns = new();
-    
+    [HideInInspector] public List<Vector3> points = new();
 
-    [Button()]
-    public void Create()
+    #endregion
+
+    public Tile tilePrefab;
+
+    #region GenerateFunctions
+
+        public void Create()
     {
         //points.ForEach(x=>DestroyImmediate(x.GameObject()));
       
@@ -62,7 +73,6 @@ public class BoardCreator : MonoBehaviour
             columns.Add(new Coloumn(){
                 index = i,
                 tiles = new List<Tile>(),
-                chipGenerator = chipGenerator
             });
         }
         points.Clear();
@@ -241,10 +251,9 @@ public class BoardCreator : MonoBehaviour
     }
 
 
-    // private void OnValidate()
-    // {
-    //     Create();
-    // }
+    #endregion
+    
+    #region TileFunctions
 
     public Tile GenerateTile( Vector3 tempPos, int x, int y)
     {
@@ -260,7 +269,17 @@ public class BoardCreator : MonoBehaviour
 
         return null;
     }
-    
+    public HashSet<int> CollectTiles(List<Tile> tileList)
+    {
+        HashSet<int> coloumnIndexSet = new HashSet<int>();
+        foreach (var tile in tileList)
+        {
+            tile.Collect();
+            coloumnIndexSet.Add(tile.coloumnIndex);
+        }
+
+        return coloumnIndexSet;
+    }
     public void SetTilesNeighbors()
     {
         if (tiles.Count == 0) return;
@@ -298,9 +317,10 @@ public class BoardCreator : MonoBehaviour
                 tile.AddNeighbor(tiles[i + xCount + 1]);
         }
     }
-
-    public ChipGenerator chipGenerator;
-
+    
+    #endregion
+    
+    
 }
 
 [Serializable]
@@ -308,9 +328,8 @@ public class Coloumn
 {
     public int index;
     public List<Tile> tiles = new();
-    public ChipGenerator chipGenerator;
 
-    public void ReplaceChips()
+    public List<Tile> ReplaceChips()
     {
         int fallenCount = 0;
         for (var i = 0; i < tiles.Count; i++)
@@ -330,20 +349,9 @@ public class Coloumn
         {
             if (tile.chip!=null)
                 tile.chip.transform.DOMove(tile.transform.position,.2f).SetEase(Ease.InSine);
-
         }
-        GenerateChips(fallenCount);
+        return tiles.GetRange(tiles.Count - fallenCount, fallenCount);
     }
-    
-    public void GenerateChips(int count)
-    {
-        for (int i = count-1; i >= 0; i--)
-        {
-            chipGenerator.GenerateChipWithAnim(tiles[(tiles.Count-1)-i]);
-        }
-    }
-    
-    
 }
 
 public enum Dimansions

@@ -7,14 +7,14 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float extraPadding  = 2f;
     public Camera cam;
 
-    public void FitCamera(BoardCreator boardCreator)
+    public void FitCamera(BoardManager boardManager)
     {
-        float width = boardCreator.width;
-        float height = boardCreator.height;
-        float offsetX = boardCreator.offsetX;
-        float offsetY = boardCreator.offsetY;
-        int xCount = boardCreator.xCount;
-        int yCount = boardCreator.yCount;
+        float width = boardManager.width;
+        float height = boardManager.height;
+        float offsetX = boardManager.offsetX;
+        float offsetY = boardManager.offsetY;
+        int xCount = boardManager.xCount;
+        int yCount = boardManager.yCount;
 
         float boardWidth = (xCount - 1) * (width + offsetX);
         float boardHeight = (yCount - 1) * (height + offsetY);
