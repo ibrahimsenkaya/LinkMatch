@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class BoardController : MonoBehaviour
 {

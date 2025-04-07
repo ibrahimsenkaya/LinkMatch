@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class ChipGenerator : MonoBehaviour
 {

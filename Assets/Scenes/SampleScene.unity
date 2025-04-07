@@ -11108,7 +11108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelData: {fileID: 11400000, guid: 625f8bd82f1dee54889a9046312cc677, type: 2}
   boardManager: {fileID: 358025090}
-  boardChecker: {fileID: 358025091}
+  boardController: {fileID: 358025091}
   chipGenerator: {fileID: 1939715922}
   cameraController: {fileID: 963194229}
   inputChecker: {fileID: 568511735}
@@ -24202,107 +24202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chipDataContainer: {fileID: 11400000, guid: c22746c8fd8428a4e9224268802b1961, type: 2}
   chipPrefab: {fileID: 8194405461072879230, guid: 8bbe8db0aca794841a68a8ba60724af4, type: 3}
-  chips:
-  - {fileID: 1043165976}
-  - {fileID: 1424653297}
-  - {fileID: 1653102445}
-  - {fileID: 816140265}
-  - {fileID: 1427629917}
-  - {fileID: 422968355}
-  - {fileID: 1999944043}
-  - {fileID: 540585453}
-  - {fileID: 895428140}
-  - {fileID: 902526092}
-  - {fileID: 2122660816}
-  - {fileID: 1204438791}
-  - {fileID: 878086235}
-  - {fileID: 359386579}
-  - {fileID: 627282594}
-  - {fileID: 308029042}
-  - {fileID: 474459008}
-  - {fileID: 1017217840}
-  - {fileID: 1597839015}
-  - {fileID: 1703768863}
-  - {fileID: 2093715903}
-  - {fileID: 2134083983}
-  - {fileID: 387298284}
-  - {fileID: 1712323101}
-  - {fileID: 1990114492}
-  - {fileID: 121503333}
-  - {fileID: 723209744}
-  - {fileID: 1418236221}
-  - {fileID: 1322770608}
-  - {fileID: 900933411}
-  - {fileID: 2111848847}
-  - {fileID: 1806581092}
-  - {fileID: 413951593}
-  - {fileID: 185098852}
-  - {fileID: 1003860405}
-  - {fileID: 343732651}
-  - {fileID: 1059422808}
-  - {fileID: 497400068}
-  - {fileID: 694209747}
-  - {fileID: 470220431}
-  - {fileID: 745658988}
-  - {fileID: 1677386096}
-  - {fileID: 88474288}
-  - {fileID: 204967457}
-  - {fileID: 249045914}
-  - {fileID: 1205088723}
-  - {fileID: 508753236}
-  - {fileID: 723859727}
-  - {fileID: 1010745198}
-  - {fileID: 895324243}
-  - {fileID: 1293880242}
-  - {fileID: 698865005}
-  - {fileID: 238091079}
-  - {fileID: 326985980}
-  - {fileID: 1516750698}
-  - {fileID: 2123048825}
-  - {fileID: 2132564355}
-  - {fileID: 405417787}
-  - {fileID: 993259371}
-  - {fileID: 1244231668}
-  - {fileID: 1211493531}
-  - {fileID: 102016461}
-  - {fileID: 666556966}
-  - {fileID: 1849529459}
-  - {fileID: 509216424}
-  - {fileID: 1638401278}
-  - {fileID: 1591932321}
-  - {fileID: 1252476428}
-  - {fileID: 1276535662}
-  - {fileID: 2131238818}
-  - {fileID: 1426598716}
-  - {fileID: 1093198849}
-  - {fileID: 1696257765}
-  - {fileID: 1439689905}
-  - {fileID: 378553478}
-  - {fileID: 1441672978}
-  - {fileID: 1984480690}
-  - {fileID: 300568273}
-  - {fileID: 345695463}
-  - {fileID: 1309520154}
-  - {fileID: 1252371488}
-  - {fileID: 1444576742}
-  - {fileID: 1560345007}
-  - {fileID: 1542187244}
-  - {fileID: 388067395}
-  - {fileID: 438445689}
-  - {fileID: 437493711}
-  - {fileID: 1755612245}
-  - {fileID: 899093291}
-  - {fileID: 1890452453}
-  - {fileID: 781949915}
-  - {fileID: 1196644265}
-  - {fileID: 229186223}
-  - {fileID: 580882081}
-  - {fileID: 516877811}
-  - {fileID: 1569907781}
-  - {fileID: 425118186}
-  - {fileID: 981523900}
-  - {fileID: 1555293583}
-  - {fileID: 1320240704}
+  chips: []
 --- !u!4 &1939715923
 Transform:
   m_ObjectHideFlags: 0
